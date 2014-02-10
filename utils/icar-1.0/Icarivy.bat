@@ -1,0 +1,1 @@
+java -classpath bin;icar-1.0.jar;ivy-java-1.2.8rc1.jar IcarClientIvy dictionnaires/dictionnaire_fusion.dat

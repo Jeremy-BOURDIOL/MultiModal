@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE grammar PUBLIC "-//W3C//DTD GRAMMAR 1.0//EN"
+                "grammar.dtd">
+<!-- the default grammar language is FR  -->
+<grammar  version="1.0"
+          mode ="voice"
+          xmlns="http://www.w3.org/2001/06/grammar"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.w3.org/2001/06/grammar
+                              grammar.xsd"
+          xml:lang="fr-FR" root="answer" tag-format="semantics/1.0">
+          
+   <rule id="answer" scope="public"> 
+    <ruleref special="GARBAGE" /> 
+    <one-of>
+      <item><ruleref uri="#yes"/>
+          <tag>out="yes";</tag></item>
+      <item><ruleref uri="#no"/>
+      <tag>out="no";</tag></item>
+      <item><ruleref uri="#nicolas"/>
+      <tag>out="binome";</tag></item>
+      <item><ruleref uri="#haut"/>
+      <tag>out="haut";</tag></item>
+      <item><ruleref uri="#bas"/>
+      <tag>out="bas";</tag></item>
+      <item><ruleref uri="#gauche"/>
+      <tag>out="gauche";</tag></item>
+      <item><ruleref uri="#droite"/>
+      <tag>out="droite";</tag></item>
+      <item><ruleref uri="#quitter"/>
+      <tag>out="quitter";</tag></item>
+    </one-of>
+    <ruleref special="GARBAGE" />
+  </rule>
+  
+      
+   <rule id="yes">
+    <one-of>
+      <item>affirmatif</item>
+      <item>tout à fait</item>
+      <item>oui</item>
+    </one-of> 
+  </rule> 
+  <rule id="no">
+    <one-of>
+      <item>négatif</item>
+      <item>non</item>
+      <item>pas question</item>
+    </one-of>
+  </rule>
+  <rule id="nicolas">
+    <one-of>
+      <item>négatif</item>
+      <item>nicolas</item>
+      <item>bcp question</item>
+    </one-of>
+  </rule>
+  <rule id="bas">
+    <one-of>
+      <item>affirmatif</item>
+      <item>bas</item>
+      <item>bcp question</item>
+    </one-of>
+  </rule>
+  <rule id="haut">
+    <one-of>
+      <item>affirmatif</item>
+      <item>haut</item>
+      <item>bcp question</item>
+    </one-of>
+  </rule>
+  <rule id="gauche">
+    <one-of>
+      <item>affirmatif</item>
+      <item>gauche</item>
+      <item>bcp question</item>
+    </one-of>
+  </rule>
+  <rule id="droite">
+    <one-of>
+      <item>affirmatif</item>
+      <item>droite</item>
+      <item>bcp question</item>
+    </one-of>
+  </rule>
+  <rule id="quitter">
+    <one-of>
+      <item>negatif</item>
+      <item>quitter</item>
+      <item>Au revoir</item>
+    </one-of>
+  </rule>
+</grammar>
