@@ -27,13 +27,8 @@
 			<item><ruleref uri="#ellipse"/>
 			<tag>out="ellipse";</tag></item>
 			
-			<item><ruleref uri="#deplacer"/>
-			<tag>out="deplacer";</tag></item>
-			<item><ruleref uri="#ce"/>
-			<tag>out="ce";</tag></item>
-			
 			<item><ruleref uri="#deplacer_ce"/>
-			<tag>out="deplacer ce";</tag></item>
+			<tag>out="deplacer_ce";</tag></item>
 			
 			<item><ruleref uri="#creer"/>
 			<tag>out="creer";</tag></item>
@@ -46,23 +41,11 @@
 			<tag>out="vert";</tag></item>
 			<item><ruleref uri="#bleu"/>
 			<tag>out="bleu";</tag></item>
-			<item><ruleref uri="#de"/>
-			<tag>out="de";</tag></item>
-			<item><ruleref uri="#cette"/>
-			<tag>out="cette";</tag></item>
-			<item><ruleref uri="#couleur"/>
-			<tag>out="couleur";</tag></item>
-			
 			<item><ruleref uri="#de_cette_couleur"/>
-			<tag>out="de cette couleur";</tag></item>
-			
-			<item><ruleref uri="#comme"/>
-			<tag>out="comme";</tag></item>
-			<item><ruleref uri="#cela"/>
-			<tag>out="cela";</tag></item>
+			<tag>out="de_cette_couleur";</tag></item>
 			
 			<item><ruleref uri="#comme_cela"/>
-			<tag>out="comme cela";</tag></item>
+			<tag>out="comme_cela";</tag></item>
 			
       <item><ruleref uri="#no"/>
       <tag>out="no";</tag></item>
@@ -108,21 +91,12 @@
 </one-of>
   </rule>
   
-      <rule id="deplacer">
+<rule id="deplacer_ce">
 <one-of>
-      <item>deplacer</item>
+      <item>deplacer ce</item>
 </one-of>
   </rule>
-        <rule id="ce">
-<one-of>
-      <item>ce</item>
-</one-of>
-  </rule>
-        <rule id="deplacer_ce">
-<one-of>
-      <item>deplacer_ce</item>
-</one-of>
-  </rule>
+  
       <rule id="creer">
 <one-of>
       <item>creer</item>
@@ -148,38 +122,13 @@
       <item>bleu</item>
 </one-of>
   </rule>
-      <rule id="de">
-<one-of>
-      <item>de</item>
-</one-of>
-  </rule>
-      <rule id="cette">
-<one-of>
-      <item>cette</item>
-</one-of>
-  </rule>
-      <rule id="couleur">
-<one-of>
-      <item>couleur</item>
-</one-of>
-  </rule>
       <rule id="de_cette_couleur">
 <one-of>
       <item>de_cette_couleur</item>
 </one-of>
   </rule>
      
-	       <rule id="comme">
-<one-of>
-      <item>comme</item>
-</one-of>
-  </rule>
-        <rule id="cela">
-<one-of>
-      <item>cela</item>
-</one-of>
-  </rule>
-        <rule id="comme_cela">
+	       <rule id="comme_cela">
 <one-of>
       <item>comme_cela</item>
 </one-of>
