@@ -1,2 +1,9 @@
+<<<<<<< HEAD
 /dist/
 *.class
+=======
+*.class
+/build/
+*.properties
+/dist/
+>>>>>>> e596228730fe600d9a669594228ac0842297f733
