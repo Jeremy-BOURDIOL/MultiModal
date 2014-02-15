@@ -93,7 +93,24 @@ public class FusionEngineBB {
                                 xc = Integer.parseInt(args[0]);
                                 yc = Integer.parseInt(args[1]);
                                 break;
-                                
+                            case C_COULEUR: 
+                                t = new Timer();
+                                t.schedule(new TimerTask() {
+
+                                    @Override
+                                    public void run() {
+                                        c ="white";
+                                        e = Etats.C_FORME;
+                                        System.out.println(e);
+                                        timerCreer();
+                                    }
+                                }, 2000);
+                                try {
+                                    bus.sendMsg("Palette:TesterPoint x="+args[0]+" y="+args[1]);
+                                } catch (IvyException ex) {
+                                    Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                break;
                             case D_FORME :
                                 x0 = Integer.parseInt(args[0]);
                                 y0 = Integer.parseInt(args[1]);
@@ -172,6 +189,16 @@ public class FusionEngineBB {
                     //TODO Jeremy a mettre dans un état
                     //lastSelected = args[2];    
                     switch(e){
+                        case C_COULEUR :
+                            t.cancel();
+                            idforme = args[2];
+                            try {
+                                bus.sendMsg("Palette:DemanderInfo nom="+idforme);
+                            } catch (IvyException ex) {
+                                Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            break;
+                        
                         case D_FORME :
                             if(args[2].startsWith("E") && f.equals(Forme.ELLIPSE) ){
                                 
@@ -194,7 +221,6 @@ public class FusionEngineBB {
                             if(args[2].startsWith("E") && f.equals(Forme.ELLIPSE) ){
                                 
                                 idforme = args[2];
-                                System.out.println(idforme);
                                 try {
                                     bus.sendMsg("Palette:DemanderInfo nom="+idforme);
                                     System.out.println("demandeInfo");
@@ -206,7 +232,6 @@ public class FusionEngineBB {
                             if(args[2].startsWith("R") && f.equals(Forme.RECTANGLE)){
                                 
                                 idforme = args[2];
-                                System.out.println(idforme);
                                 try {
                                     
                                     bus.sendMsg("Palette:DemanderInfo nom="+idforme);
@@ -224,12 +249,24 @@ public class FusionEngineBB {
             
              bus.bindMsg("^Palette:Info nom=([A-Z]*[0-9]*) x=([0-9]*) y=([0-9]*) longueur=([0-9]*) hauteur=([0-9]*) couleurFond=(.*) couleurContour=(.*)",new IvyMessageListener() {
                 public void receive(IvyClient client, String[] args) {
-                        System.out.println("Couleur fond : "+args[5]);
-                        if(c.equals(args[5])){                            
-                            e = Etats.D_FORME_SELECTIONNEE;
+                    switch(e){
+                        case C_COULEUR:
+                            c = args[5];
+                            e = Etats.C_FORME;
                             System.out.println(e);
-                            timerDeplacer();
-                        }
+                            timerCreer();
+                            break;
+                        case D_COULEUR :
+                            System.out.println("Couleur fond : "+args[5]);
+                            if(c.equals(args[5])){  
+                                t.cancel();
+                                e = Etats.D_FORME_SELECTIONNEE;
+                                System.out.println(e);
+                                timerDeplacer();
+                            }   
+                            break;
+                    }   
+                
                 }
             });
             
@@ -310,7 +347,7 @@ public class FusionEngineBB {
     private void parsecmdSRA(String string) {
         String rep = "";
         String cmd = skip3suspension(string);
-        System.out.println("Recu : " + cmd);
+        //System.out.println("Recu : " + cmd);
         switch(cmd) {
             case "annuler":
                 e = Etats.INIT;
@@ -333,7 +370,7 @@ public class FusionEngineBB {
                 break;
                 
             case "creer" :
-                System.out.println("Creation");
+                //System.out.println("Creation");
                 switch (e) {
                      case INIT :
                          e = Etats.CREER;
@@ -457,6 +494,15 @@ public class FusionEngineBB {
                         System.out.println(e);
                         c = "blue";
                         timerDeplacerAvecCouleur();
+                        break;
+                }
+                break;
+            case "de cette couleur":
+                switch(e){
+                    case C_FORME:
+                        t.cancel();
+                        e = Etats.C_COULEUR;
+                        System.out.println(e);
                         break;
                 }
                 break;
