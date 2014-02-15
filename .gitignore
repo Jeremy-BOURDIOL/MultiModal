@@ -1,3 +1,4 @@
 *.class
-build/classes/fusionengineb/b/*.class
+/build/
 *.properties
+/dist/
