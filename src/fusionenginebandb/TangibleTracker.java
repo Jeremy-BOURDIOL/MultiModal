@@ -27,6 +27,7 @@ import javax.media.j3d.VirtualUniverse;
 import javax.swing.JFrame;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
 import jp.nyatla.nyartoolkit.core.NyARCode;
 import jp.nyatla.nyartoolkit.java3d.utils.J3dNyARParam;
 import jp.nyatla.nyartoolkit.java3d.utils.NyARMultipleMarkerBehaviorHolder;
@@ -146,6 +147,12 @@ public class TangibleTracker extends JFrame implements NyARMultipleMarkerBehavio
         //ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã�®è¨­å®š
         setLayout(new BorderLayout());
         add(canvas, BorderLayout.CENTER);
+
+        this.setVisible(true);
+        Insets ins = this.getInsets();
+        this.setSize(320 + ins.left + ins.right, 240 + ins.top + ins.bottom);
+        this.startCapture();
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     
 
@@ -157,7 +164,20 @@ public class TangibleTracker extends JFrame implements NyARMultipleMarkerBehavio
     
     @Override
     public void onUpdate(int i_markers, javax.media.j3d.Transform3D td) {
-        System.out.println("Marker : " + i_markers );
+        //System.out.println("Marker : " + i_markers );
+        Vector3f v = new Vector3f();
+        td.get(v);
+        switch (i_markers) {
+            case 0:
+                support.firePropertyChange("LocationChange", null, v);
+                break;
+            case 1:
+                support.firePropertyChange("Color", null, "ROUGE");
+                break;
+            case 2:
+                support.firePropertyChange("Color", null, "BLEU");
+                break;
+        }
     }
     
     public void addPropertyChangeListener(PropertyChangeListener listener) {

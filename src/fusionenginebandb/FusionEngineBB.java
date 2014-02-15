@@ -7,11 +7,14 @@ package fusionenginebandb;
 import fr.dgac.ivy.*;
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.vecmath.Vector3f;
 
 /**
  *
@@ -195,8 +198,55 @@ public class FusionEngineBB {
             });
             */
             
+            TangibleTracker track = new TangibleTracker();
+            track.addPropertyChangeListener("Color", new PropertyChangeListener() {
+
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if(evt.getNewValue() == "ROUGE") {
+                        switch(e){
+                            case C_FORME :
+                                t.cancel();
+                                c = "red";
+                                System.out.println(c);
+                                timerCreer();
+                                break;
+                        }
+                    }
+                    else {
+                        switch(e){
+                            case C_FORME :
+                                t.cancel();
+                                c = "blue";
+                                System.out.println(c);
+                                timerCreer();
+                                break;
+                        }
+                    }
+                }
+            });
+            track.addPropertyChangeListener("LocationChange", new PropertyChangeListener() {
+
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    switch(e){
+                        case D_FORME_SELECTIONNEE :
+                            Vector3f v = (Vector3f) evt.getNewValue();
+                            try {
+                                System.out.println(e + " -> bouger " + idforme);
+                                System.out.println("x = " + v.x + " | y = " + v.y);
+                                bus.sendMsg("Palette:DeplacerObjet nom="+idforme+" x="+(int)(v.x*30)+" y="+(int)(-v.y*30));
+                            } catch (IvyException ex) {
+                                Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            break;
+                    }
+                }
+                
+            });
+            
             bus.start(null);
-        } catch (IvyException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -310,10 +360,9 @@ public class FusionEngineBB {
                         timerCreer();
                         break;
                     case DEPLACER :
-                           e =Etats.D_FORME;
-                           f= Forme.RECTANGLE;
+                           e = Etats.D_FORME;
+                           f = Forme.RECTANGLE;
                            System.out.println(e);
-
                            break;
                 }
                 //rep = "CreerRectangle x="+x+" y="+y+" longueur=80 hauteur=40 couleurFond=white";
@@ -327,9 +376,10 @@ public class FusionEngineBB {
                         timerCreer();
                         System.out.println(e+" "+f);
                         break;
-                        case DEPLACER :
-                           e =Etats.D_FORME;
+                    case DEPLACER :
+                           e = Etats.D_FORME;
                            f = Forme.ELLIPSE;
+                           System.out.println(e);
                            break;
                 }
                 //rep = "CreerEllipse x="+x+" y="+y;
@@ -410,13 +460,6 @@ public class FusionEngineBB {
                 break;
         }
     }
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        new FusionEngineBB();
-    }
 
     private String skip3suspension(String string) {
         String ret = string.replace("...", "");
@@ -484,6 +527,13 @@ public class FusionEngineBB {
                 idforme = "";
             }
         };
-        t.schedule(tc, 2000);
+        t.schedule(tc, 10000);
+    }
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) throws Exception {
+        new FusionEngineBB();
     }
 }
