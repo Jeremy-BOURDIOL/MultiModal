@@ -34,8 +34,6 @@ public class FusionEngineBB {
     private int y0;
     private int x1;
     private int y1;
-    public enum Etats{INIT,CREER,C_FORME,C_POSITION,C_COULEUR, C_ATTENTE_POSITION,DEPLACER,D_FORME, D_FORME_SELECTIONNEE, D_POSITION, D_COULEUR, D_ATTENTE_POSITION};
-    public enum Forme{NULL,RECTANGLE,ELLIPSE};
     private Etats e = Etats.INIT;
     private Forme f;
     private String c = "white";
@@ -54,162 +52,20 @@ public class FusionEngineBB {
         try {
             bus.bindMsg("^ICAR (.*)",new IvyMessageListener() {
                 public void receive(IvyClient client, String[] args) {
+                    parsecmdICAR(args[0]);
+                    /*
                     try {
                         bus.sendMsg("Palette:"+parsecmdICAR(args[0]));
                     } catch (IvyException ex) {
                         Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    }*/
                 }
             });
            
-             bus.bindMsg("^sra5 Text=creer",new IvyMessageListener() {
+             bus.bindMsg("^sra5 Text=(.*) Confidence=(.*)",new IvyMessageListener() {
                 public void receive(IvyClient client, String[] args) {
-                       switch (e) {
-                            case INIT :
-                                e = Etats.CREER;
-                                System.out.println(e);
-                                break;
-                       }    
+                       parsecmdSRA(args[0]);
                     }
-            });
-            bus.bindMsg("^sra5 Text=deplacer ce",new IvyMessageListener() {
-                public void receive(IvyClient client, String[] args) {
-                    
-                        switch (e) {
-                            case INIT :
-                                e = Etats.DEPLACER;
-                                System.out.println(e);
-                                break;
-                       } 
-                    
-                }
-            });
-            bus.bindMsg("^sra5 Text=rectangle",new IvyMessageListener() {
-                public void receive(IvyClient client, String[] args) {
-                        //bus.sendMsg("Palette:"+parsecmdSRA(args[0]));
-                        switch(e){
-                            case CREER :
-                                e = Etats.C_FORME;
-                                f = Forme.RECTANGLE;
-                                System.out.println(e+" "+f);
-                                timerCreer();
-                                break;
-                               case DEPLACER :
-                                   e =Etats.D_FORME;
-                                   f= Forme.RECTANGLE;
-                                   System.out.println(e);
-                                   
-                                   break;
-                        }
-                    
-                }
-            });
-            bus.bindMsg("^sra5 Text=ellipse",new IvyMessageListener() {
-                public void receive(IvyClient client, String[] args) {
-
-                        switch(e){
-                            case CREER :
-                                e = Etats.C_FORME;
-                                f = Forme.ELLIPSE;
-                                timerCreer();
-                                System.out.println(e+" "+f);
-                                break;
-                                case DEPLACER :
-                                   e =Etats.D_FORME;
-                                   f = Forme.ELLIPSE;
-                                   break;
-                        }
-                    
-                }
-            });
-            bus.bindMsg("^sra5 Text=ici",new IvyMessageListener() {
-                public void receive(IvyClient client, String[] args) {
-
-                        switch(e){
-                            case C_FORME :
-                                t.cancel();
-                                e = Etats.C_POSITION;
-                                System.out.println(e);
-                                break;
-                            case C_ATTENTE_POSITION :
-                                t2.cancel();
-                                timerCreer();
-                                break;
-                            case D_FORME_SELECTIONNEE :
-                                e = Etats.D_POSITION;
-                                System.out.println(e);
-                                t.cancel();
-                                break;
-                            /*case D_ATTENTE_POSITION :
-                                t2.cancel();
-                                e = Etats.D_FORME_SELECTIONNEE;
-                                t = new Timer();  
-                                tc = new TimerTask() {
-                                    @Override
-                                    public void run() {
-                                        e = Etats.INIT;
-                                        System.out.println(e);
-                                        try {
-                                            deplacerForme(x1-x0, y1-y0, idforme);
-                                        } catch (IvyException ex) {
-                                            Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
-                                        }
-                                        x0 = 0;
-                                        y0 = 0;
-                                        x1=0;
-                                        y1=0;
-                                        c = "white";
-                                        f = Forme.NULL;
-                                        idforme = "";
-                                    }
-                                };
-                                t.schedule(tc, 2000);
-                                break;*/
-                                
-                               
-                        }
-
-                }
-            });
-            bus.bindMsg("^sra5 Text=rouge",new IvyMessageListener() {
-                public void receive(IvyClient client, String[] args) {
-
-                        switch(e){
-                            case C_FORME :
-                                t.cancel();
-                                c = "red";
-                                System.out.println(c);
-                                timerCreer();
-                                break;
-
-                        }
-                }
-            });
-            bus.bindMsg("^sra5 Text=vert",new IvyMessageListener() {
-                public void receive(IvyClient client, String[] args) {
-
-                        switch(e){
-                            case C_FORME :
-                                t.cancel();
-                                c = "green";
-                                System.out.println(c);
-                                timerCreer();
-                                break;
-                        }
-                }
-            });
-            bus.bindMsg("^sra5 Text=bleu",new IvyMessageListener() {
-                public void receive(IvyClient client, String[] args) {
-
-                        switch(e){
-                            case C_FORME :
-                               t.cancel();
-                               c = "blue";
-                               System.out.println(c);
-                               timerCreer();
-                               break;
-                        }
-                }
             });
 
             bus.bindMsg("^Palette:MouseReleased x=([0-9]*) y=([0-9]*)",new IvyMessageListener() {
@@ -284,28 +140,6 @@ public class FusionEngineBB {
                 
             });
             
-            bus.bindMsg("^sra5 Text=annuler",new IvyMessageListener() {
-                public void receive(IvyClient client, String[] args) {
-                    e = Etats.INIT;
-                    System.out.println(e);
-                    xc = 0;
-                    yc = 0;
-                    x0 = 0;
-                    y0 = 0;
-                    x1 = 0;
-                    y1 = 0;
-                    idforme = "";
-                    c = "white";
-                    f = Forme.NULL;
-                    if(t != null){
-                        t.purge();
-                    }
-                    if(t2 != null){
-                        t2.purge();
-                    }
-                }
-            });
-            
             bus.bindMsg("^Palette:ResultatTesterPoint x=([0-9]*) y=([0-9]*) nom=(.*)",new IvyMessageListener() {
                 public void receive(IvyClient client, String[] args) {
                     //TODO Jeremy a mettre dans un état
@@ -351,15 +185,36 @@ public class FusionEngineBB {
         }
     }
     
-    private String parsecmdICAR(String string) {
+    private void parsecmdICAR(String string) {
         String rep = "";
         switch(string) {
             case "Rectangle" :
-                rep = "CreerRectangle x="+x+" y="+y+" longueur=80 hauteur=40 couleurFond=white";
+                switch(e){
+                    case CREER :
+                        e = Etats.C_FORME;
+                        f = Forme.RECTANGLE;
+                        System.out.println(e+" "+f);
+                        timerCreer();
+                        break;
+                }
+                //rep = "CreerRectangle x="+x+" y="+y+" longueur=80 hauteur=40 couleurFond=white";
                 break;
             case "Ellipse" :
-                rep = "CreerEllipse x="+x+" y="+y;
+                switch(e){
+                    case CREER :
+                        e = Etats.C_FORME;
+                        f = Forme.ELLIPSE;
+                        timerCreer();
+                        System.out.println(e+" "+f);
+                        break;
+                        case DEPLACER :
+                           e =Etats.D_FORME;
+                           f = Forme.ELLIPSE;
+                           break;
+                }
+                //rep = "CreerEllipse x="+x+" y="+y;
                 break;
+            /*
             case "Haut" :
                 rep = "DeplacerObjet nom="+lastSelected+" x=0 y=-25";
                 break;
@@ -372,24 +227,178 @@ public class FusionEngineBB {
             case "Droite" :
                 rep = "DeplacerObjet nom="+lastSelected+" x=25 y=0";
                 break;
+            */
             case "Deplacer" :
-                waiting_loc = true;
+                switch (e) {
+                    case INIT :
+                        e = Etats.DEPLACER;
+                        System.out.println(e);
+                        break;
+                } 
+                //waiting_loc = true;
                 break;
         }
-        return rep;
     }
     
 
-    private String parsecmdSRA(String string) {
+    private void parsecmdSRA(String string) {
         String rep = "";
         String cmd = skip3suspension(string);
+        System.out.println("Recu : " + cmd);
         switch(cmd) {
+            case "annuler":
+                e = Etats.INIT;
+                System.out.println(e);
+                xc = 0;
+                yc = 0;
+                x0 = 0;
+                y0 = 0;
+                x1 = 0;
+                y1 = 0;
+                idforme = "";
+                c = "white";
+                f = Forme.NULL;
+                if(t != null){
+                    t.purge();
+                }
+                if(t2 != null){
+                    t2.purge();
+                }
+                break;
+                
+            case "creer" :
+                System.out.println("Creation");
+                switch (e) {
+                     case INIT :
+                         e = Etats.CREER;
+                         System.out.println(e);
+                         break;
+                }  
+                break;
+                
+            case "deplacer ce":
+                switch (e) {
+                    case INIT :
+                        e = Etats.DEPLACER;
+                        System.out.println(e);
+                        break;
+                } 
+                break;
+                
             case "rectangle" :
-                rep = "CreerRectangle x="+x+" y="+y+" longueur=80 hauteur=40 couleurFond=white";
+                switch(e){
+                    case CREER :
+                        e = Etats.C_FORME;
+                        f = Forme.RECTANGLE;
+                        System.out.println(e+" "+f);
+                        timerCreer();
+                        break;
+                    case DEPLACER :
+                           e =Etats.D_FORME;
+                           f= Forme.RECTANGLE;
+                           System.out.println(e);
+
+                           break;
+                }
+                //rep = "CreerRectangle x="+x+" y="+y+" longueur=80 hauteur=40 couleurFond=white";
                 break;
+                
             case "ellipse" :
-                rep = "CreerEllipse x="+x+" y="+y;
+                switch(e){
+                    case CREER :
+                        e = Etats.C_FORME;
+                        f = Forme.ELLIPSE;
+                        timerCreer();
+                        System.out.println(e+" "+f);
+                        break;
+                        case DEPLACER :
+                           e =Etats.D_FORME;
+                           f = Forme.ELLIPSE;
+                           break;
+                }
+                //rep = "CreerEllipse x="+x+" y="+y;
                 break;
+                
+            case "ici" :
+                switch(e){
+                    case C_FORME :
+                        t.cancel();
+                        e = Etats.C_POSITION;
+                        System.out.println(e);
+                        break;
+                    case C_ATTENTE_POSITION :
+                        t2.cancel();
+                        timerCreer();
+                        break;
+                    case D_FORME_SELECTIONNEE :
+                        e = Etats.D_POSITION;
+                        System.out.println(e);
+                        t.cancel();
+                        break;
+                    /*case D_ATTENTE_POSITION :
+                        t2.cancel();
+                        e = Etats.D_FORME_SELECTIONNEE;
+                        t = new Timer();  
+                        tc = new TimerTask() {
+                            @Override
+                            public void run() {
+                                e = Etats.INIT;
+                                System.out.println(e);
+                                try {
+                                    deplacerForme(x1-x0, y1-y0, idforme);
+                                } catch (IvyException ex) {
+                                    Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                x0 = 0;
+                                y0 = 0;
+                                x1=0;
+                                y1=0;
+                                c = "white";
+                                f = Forme.NULL;
+                                idforme = "";
+                            }
+                        };
+                        t.schedule(tc, 2000);
+                        break;*/
+                }
+                break;
+                
+            case "rouge":
+                switch(e){
+                    case C_FORME :
+                        t.cancel();
+                        c = "red";
+                        System.out.println(c);
+                        timerCreer();
+                        break;
+
+                }
+                break;
+                
+            case "vert":
+                switch(e){
+                    case C_FORME :
+                        t.cancel();
+                        c = "green";
+                        System.out.println(c);
+                        timerCreer();
+                        break;
+
+                }
+                break;
+                
+            case "bleu":
+                switch(e){
+                    case C_FORME :
+                        t.cancel();
+                        c = "blue";
+                        System.out.println(c);
+                        timerCreer();
+                        break;
+
+                }
+                break;
+                
             case "haut" :
                 rep = "DeplacerObjet nom="+lastSelected+" x=0 y=-25";
                 break;
@@ -403,7 +412,6 @@ public class FusionEngineBB {
                 rep = "DeplacerObjet nom="+lastSelected+" x=25 y=0";
                 break;
         }
-        return rep;
     }
     
     /**
@@ -415,16 +423,19 @@ public class FusionEngineBB {
 
     private String skip3suspension(String string) {
         String ret = string.replace("...", "");
+        if(ret.charAt(0) == ' ') {
+            ret = ret.replaceFirst(" ", "");
+        }
         return ret;
     }
     
     private void creerForme(Forme f, int x, int y, String c) throws IvyException {
         switch(f){
             case RECTANGLE :
-                bus.sendMsg("Palette:CreerRectangle x="+xc+" y="+yc+" longueur=80 hauteur=40 couleurFond="+c);
+                bus.sendMsg("Palette:CreerRectangle x="+(xc-40)+" y="+(yc-20)+" longueur=80 hauteur=40 couleurFond="+c);
                 break;
             case ELLIPSE :
-                bus.sendMsg("Palette:CreerEllipse x="+xc+" y="+yc+" longueur=80 hauteur=40 couleurFond="+c);
+                bus.sendMsg("Palette:CreerEllipse x="+(xc-40)+" y="+(yc-20)+" longueur=80 hauteur=40 couleurFond="+c);
                 break;
         }
     }
@@ -433,7 +444,7 @@ public class FusionEngineBB {
            bus.sendMsg("Palette:DeplacerObjet nom="+idforme+" x="+x1+" y="+y1);
     }
     
-        private void timerCreer(){
+    private void timerCreer(){
         t = new Timer();
         tc = new TimerTask() {
             @Override
