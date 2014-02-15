@@ -108,6 +108,22 @@ public class FusionEngineBB {
                                 
                             case D_FORME_SELECTIONNEE :
                                 t.cancel();
+                                e = Etats.D_ATTENTE_POSITION;
+                                System.out.println(e);
+                                x1 = Integer.parseInt(args[0]);
+                                y1 = Integer.parseInt(args[1]);
+                                t2 = new Timer();
+                                t2.schedule(new TimerTask() {
+
+                                    @Override
+                                    public void run() {
+                                        x1 = x0;
+                                        y1 = y0;
+                                        e = Etats.D_FORME_SELECTIONNEE;
+                                        System.out.println(e);
+                                        timerDeplacer();
+                                    }
+                                }, 2000);
                                 break;
                             case D_POSITION :
                                     x1 = Integer.parseInt(args[0]);
@@ -335,31 +351,12 @@ public class FusionEngineBB {
                         System.out.println(e);
                         t.cancel();
                         break;
-                    /*case D_ATTENTE_POSITION :
+                    case D_ATTENTE_POSITION :
                         t2.cancel();
                         e = Etats.D_FORME_SELECTIONNEE;
-                        t = new Timer();  
-                        tc = new TimerTask() {
-                            @Override
-                            public void run() {
-                                e = Etats.INIT;
-                                System.out.println(e);
-                                try {
-                                    deplacerForme(x1-x0, y1-y0, idforme);
-                                } catch (IvyException ex) {
-                                    Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                                x0 = 0;
-                                y0 = 0;
-                                x1=0;
-                                y1=0;
-                                c = "white";
-                                f = Forme.NULL;
-                                idforme = "";
-                            }
-                        };
-                        t.schedule(tc, 2000);
-                        break;*/
+                        System.out.println(e);
+                        timerDeplacer();
+                        break;
                 }
                 break;
                 
