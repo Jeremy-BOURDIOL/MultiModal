@@ -34,7 +34,7 @@ public class FusionEngineBB {
     private int y0;
     private int x1;
     private int y1;
-    public enum Etats{INIT,CREER,C_FORME,C_POSITION,C_COULEUR, C_ATTENTE_POSITION,DEPLACER,D_FORME, D_FORME_SELECTIONNEE, D_POSITION};
+    public enum Etats{INIT,CREER,C_FORME,C_POSITION,C_COULEUR, C_ATTENTE_POSITION,DEPLACER,D_FORME, D_FORME_SELECTIONNEE, D_POSITION, D_COULEUR, D_ATTENTE_POSITION};
     public enum Forme{NULL,RECTANGLE,ELLIPSE};
     private Etats e = Etats.INIT;
     private Forme f;
@@ -64,7 +64,6 @@ public class FusionEngineBB {
            
              bus.bindMsg("^sra5 Text=creer",new IvyMessageListener() {
                 public void receive(IvyClient client, String[] args) {
-                        //bus.sendMsg("Palette:"+parsecmdSRA(args[0]));
                        switch (e) {
                             case INIT :
                                 e = Etats.CREER;
@@ -93,28 +92,11 @@ public class FusionEngineBB {
                                 e = Etats.C_FORME;
                                 f = Forme.RECTANGLE;
                                 System.out.println(e+" "+f);
-                                tc = new TimerTask() {
-
-                                    @Override
-                                    public void run() {
-                                        e = Etats.INIT;
-                                        System.out.println(e);
-                                        try {
-                                            creerForme(f,xc,yc,c);
-                                        } catch (IvyException ex) {
-                                            Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
-                                        }
-                                        xc = 0;
-                                        yc = 0;
-                                        c = "white";
-                                        f = Forme.NULL;
-                                    }
-                                };
-                                t = new Timer();
-                                t.schedule(tc, 3000);
+                                timerCreer();
                                 break;
                                case DEPLACER :
                                    e =Etats.D_FORME;
+                                   f= Forme.RECTANGLE;
                                    System.out.println(e);
                                    
                                    break;
@@ -129,26 +111,7 @@ public class FusionEngineBB {
                             case CREER :
                                 e = Etats.C_FORME;
                                 f = Forme.ELLIPSE;
-                                tc = new TimerTask() {
-
-                                    @Override
-                                    public void run() {
-                                        e = Etats.INIT;
-                                        System.out.println(e);
-                                        try {
-                                            creerForme(f,xc,yc,c);
-                                        } catch (IvyException ex) {
-                                            Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
-                                        }
-                                        xc = 0;
-                                        yc = 0;
-                                        c = "white";
-                                        f = Forme.NULL;
-                                    }
-                                };
-                                t = new Timer();
-                                t.schedule(tc,3000);
-
+                                timerCreer();
                                 System.out.println(e+" "+f);
                                 break;
                                 case DEPLACER :
@@ -170,29 +133,39 @@ public class FusionEngineBB {
                                 break;
                             case C_ATTENTE_POSITION :
                                 t2.cancel();
-                                t = new Timer();
+                                timerCreer();
+                                break;
+                            case D_FORME_SELECTIONNEE :
+                                e = Etats.D_POSITION;
+                                System.out.println(e);
+                                t.cancel();
+                                break;
+                            /*case D_ATTENTE_POSITION :
+                                t2.cancel();
+                                e = Etats.D_FORME_SELECTIONNEE;
+                                t = new Timer();  
                                 tc = new TimerTask() {
-
                                     @Override
                                     public void run() {
                                         e = Etats.INIT;
                                         System.out.println(e);
                                         try {
-                                            creerForme(f,xc,yc,c);
+                                            deplacerForme(x1-x0, y1-y0, idforme);
                                         } catch (IvyException ex) {
                                             Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
                                         }
-                                        xc = 0;
-                                        yc = 0;
+                                        x0 = 0;
+                                        y0 = 0;
+                                        x1=0;
+                                        y1=0;
                                         c = "white";
                                         f = Forme.NULL;
+                                        idforme = "";
                                     }
                                 };
-                                t.schedule(tc,3000);
-                                break;
-                            case D_FORME_SELECTIONNEE :
-                                e = Etats.D_POSITION;
-                                System.out.println(e);
+                                t.schedule(tc, 2000);
+                                break;*/
+                                
                                
                         }
 
@@ -206,27 +179,9 @@ public class FusionEngineBB {
                                 t.cancel();
                                 c = "red";
                                 System.out.println(c);
-                                tc = new TimerTask() {
-
-                                    @Override
-                                    public void run() {
-                                        e = Etats.INIT;
-                                        System.out.println(e);
-                                        try {
-                                            creerForme(f,xc,yc,c);
-                                        } catch (IvyException ex) {
-                                            Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
-                                        }
-                                        xc = 0;
-                                        yc = 0;
-                                        c = "white";
-                                        f = Forme.NULL;
-                                    }
-                                };
-                                t = new Timer();
-                                t.schedule(tc,3000);
-
+                                timerCreer();
                                 break;
+
                         }
                 }
             });
@@ -238,26 +193,7 @@ public class FusionEngineBB {
                                 t.cancel();
                                 c = "green";
                                 System.out.println(c);
-                                tc = new TimerTask() {
-
-                                    @Override
-                                    public void run() {
-                                        e = Etats.INIT;
-                                        System.out.println(e);
-                                        try {
-                                            creerForme(f,xc,yc,c);
-                                        } catch (IvyException ex) {
-                                            Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
-                                        }
-                                        xc = 0;
-                                        yc = 0;
-                                        c = "white";
-                                        f = Forme.NULL;
-                                    }
-                                };
-                                t = new Timer();
-                                t.schedule(tc,3000);
-                                
+                                timerCreer();
                                 break;
                         }
                 }
@@ -270,26 +206,8 @@ public class FusionEngineBB {
                                t.cancel();
                                c = "blue";
                                System.out.println(c);
-                               tc = new TimerTask() {
-
-                                    @Override
-                                    public void run() {
-                                        e = Etats.INIT;
-                                        System.out.println(e);
-                                        try {
-                                            creerForme(f,xc,yc,c);
-                                        } catch (IvyException ex) {
-                                            Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
-                                        }
-                                        xc = 0;
-                                        yc = 0;
-                                        c = "white";
-                                        f = Forme.NULL;
-                                    }
-                                };
-                               t = new Timer();
-                               t.schedule(tc,3000);
-                                break;
+                               timerCreer();
+                               break;
                         }
                 }
             });
@@ -303,26 +221,7 @@ public class FusionEngineBB {
                                 xc = Integer.parseInt(args[0]);
                                 yc = Integer.parseInt(args[1]);
                                 e =  Etats.C_FORME;
-                                tc = new TimerTask() {
-
-                                    @Override
-                                    public void run() {
-                                        e = Etats.INIT;
-                                        System.out.println(e);
-                                        try {
-                                            creerForme(f,xc,yc,c);
-                                        } catch (IvyException ex) {
-                                            Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
-                                        }
-                                        xc = 0;
-                                        yc = 0;
-                                        c = "white";
-                                        f = Forme.NULL;
-                                    }
-                                };
-                                t = new Timer();
-                                t.schedule(tc,3000);
-
+                                timerCreer();
                                 break;
                             case C_FORME :
                                 e = Etats.C_ATTENTE_POSITION;
@@ -338,29 +237,28 @@ public class FusionEngineBB {
                                 xc = Integer.parseInt(args[0]);
                                 yc = Integer.parseInt(args[1]);
                                 break;
+                                
                             case D_FORME :
                                 x0 = Integer.parseInt(args[0]);
                                 y0 = Integer.parseInt(args[1]);
-                                x1 = 0;
-                                y1 = 0;
+                                x1 = x0;
+                                y1 = y0;
                                 try {
                                     bus.sendMsg("Palette:TesterPoint x="+args[0]+" y="+args[1]);
                                 } catch (IvyException ex) {
                                     Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                                 break;
-                            case D_POSITION :
-                                e = Etats.D_FORME_SELECTIONNEE;
-                                x1 = Integer.parseInt(args[0]);
-                                y1 = Integer.parseInt(args[1]);
-                                //Test pour le moment, Timers implémentés plus tard
-                                try {
-                                    deplacerForme(x1-x0,y1-y0,idforme);
-                                    e = Etats.INIT;
-                                } catch (IvyException ex) {
-                                    Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
-                                }
+                                
+                            case D_FORME_SELECTIONNEE :
+                                t.cancel();
                                 break;
+                            case D_POSITION :
+                                    x1 = Integer.parseInt(args[0]);
+                                    y1 = Integer.parseInt(args[1]);
+                                    timerDeplacer();
+                                    break;
+                                
                         }
                         
                         //TODO Jeremy mettre dans un état
@@ -386,6 +284,27 @@ public class FusionEngineBB {
                 
             });
             
+            bus.bindMsg("^sra5 Text=annuler",new IvyMessageListener() {
+                public void receive(IvyClient client, String[] args) {
+                    e = Etats.INIT;
+                    System.out.println(e);
+                    xc = 0;
+                    yc = 0;
+                    x0 = 0;
+                    y0 = 0;
+                    x1 = 0;
+                    y1 = 0;
+                    idforme = "";
+                    c = "white";
+                    f = Forme.NULL;
+                    if(t != null){
+                        t.purge();
+                    }
+                    if(t2 != null){
+                        t2.purge();
+                    }
+                }
+            });
             
             bus.bindMsg("^Palette:ResultatTesterPoint x=([0-9]*) y=([0-9]*) nom=(.*)",new IvyMessageListener() {
                 public void receive(IvyClient client, String[] args) {
@@ -393,13 +312,27 @@ public class FusionEngineBB {
                     //lastSelected = args[2];    
                     switch(e){
                         case D_FORME :
-                            e = Etats.D_FORME_SELECTIONNEE;
-                            idforme = args[2];
-                            System.out.println(idforme);
+                            if(args[2].startsWith("E") && f.equals(Forme.ELLIPSE) ){
+                                
+                                e = Etats.D_FORME_SELECTIONNEE;
+                                idforme = args[2];
+                                System.out.println(e + " " + idforme);
+                                timerDeplacer();
+                            }
+                            
+                            if(args[2].startsWith("R") && f.equals(Forme.RECTANGLE)){
+                                
+                                e = Etats.D_FORME_SELECTIONNEE;
+                                idforme = args[2];
+                                System.out.println(e + " " + idforme);
+                                timerDeplacer();
+                            }   
                             break;
+                            
                     }
                 }
             });
+            
             /*
             //"Palette:Info nom=E2 x=79 y=68 longueur=100 hauteur=50 couleurFond=white couleurContour=black"
             bus.bindMsg("^Palette:Info x=([A-Z]*[0-9]*) x=([0-9]*) y=([0-9]*)",new IvyMessageListener() {
@@ -498,5 +431,51 @@ public class FusionEngineBB {
     
     private void deplacerForme(int x1, int y1, String idforme) throws IvyException {
            bus.sendMsg("Palette:DeplacerObjet nom="+idforme+" x="+x1+" y="+y1);
+    }
+    
+        private void timerCreer(){
+        t = new Timer();
+        tc = new TimerTask() {
+            @Override
+            public void run() {
+                e = Etats.INIT;
+                System.out.println(e);
+                try {
+                    creerForme(f,xc,yc,c);
+                } catch (IvyException ex) {
+                    Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                xc = 0;
+                yc = 0;
+                c = "white";
+                f = Forme.NULL;
+            }
+        };
+        t.schedule(tc,3000);
+    }
+    
+    private void timerDeplacer(){
+        t = new Timer();
+        tc = new TimerTask() {
+
+            @Override
+            public void run() {
+                e = Etats.INIT;
+                System.out.println(e);
+                try {
+                    deplacerForme(x1-x0, y1-y0, idforme);
+                } catch (IvyException ex) {
+                    Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                x0=0;
+                y0=0;
+                x1=0;
+                y1=0;
+                c = "white";
+                f = Forme.NULL;
+                idforme = "";
+            }
+        };
+        t.schedule(tc, 2000);
     }
 }

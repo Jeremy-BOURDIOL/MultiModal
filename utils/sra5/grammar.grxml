@@ -14,14 +14,7 @@
     <ruleref special="GARBAGE" /> 
     <one-of>
 		
-		<item><ruleref uri="#bas"/>
-			<tag>out="bas";</tag></item>
-		<item><ruleref uri="#haut"/>
-			<tag>out="haut";</tag></item>
-		<item><ruleref uri="#droite"/>
-			<tag>out="droite";</tag></item>
-		<item><ruleref uri="#gauche"/>
-			<tag>out="gauche";</tag></item>
+
 			<item><ruleref uri="#rectangle"/>
 			<tag>out="rectangle";</tag></item>
 			<item><ruleref uri="#ellipse"/>
@@ -47,37 +40,18 @@
 			<item><ruleref uri="#comme_cela"/>
 			<tag>out="comme_cela";</tag></item>
 			
-      <item><ruleref uri="#no"/>
-      <tag>out="no";</tag></item>
+      		<item><ruleref uri="#annuler"/>
+			<tag>out="annuler";</tag></item>
     </one-of>
     <ruleref special="GARBAGE" />
   </rule>
   
       
 
-<rule id="bas">
-    <one-of>
-      <item>bas</item>
-    </one-of> 
-  </rule>  
-  <rule id="haut">
-    <one-of>
-      <item>haut</item>
-    </one-of> 
-  </rule> 
-  <rule id="gauche">
-    <one-of>
-      <item>gauche</item>
-    </one-of> 
-  </rule> 
-  <rule id="droite">
-    <one-of>
-      <item>droite</item>
-    </one-of> 
-  </rule> 
-  <rule id="no">
+
+  <rule id="annuler">
 <one-of>
-      <item>non</item>
+      <item>annuler</item>
 </one-of>
   </rule> 
   <rule id="rectangle">
