@@ -565,6 +565,10 @@ public class FusionEngineBB {
                         System.out.println(e+" "+f);
                         timerCreer();
                         break;
+                    case DEPLACER :
+                        e =Etats.D_FORME;
+                        f = Forme.RECTANGLE;
+                        break;
                     case INIT:
                         //Interdit
                         break;
@@ -578,9 +582,6 @@ public class FusionEngineBB {
                         //Interdit
                         break;
                     case C_ATTENTE_POSITION:
-                        //Interdit
-                        break;
-                    case DEPLACER:
                         //Interdit
                         break;
                     case D_FORME:
