@@ -172,6 +172,9 @@ public class FusionEngineBB {
                             case D_ATTENTE_POSITION:
                                 //Interdit
                                 break;
+                            case D_CAMERA:
+                                //Interdit
+                                break;
                                 
                         }
                 }
@@ -264,7 +267,9 @@ public class FusionEngineBB {
                         case D_ATTENTE_POSITION:
                             //Interdit
                             break;
-                               
+                               case D_CAMERA:
+                                //Interdit
+                                break;
                     }
                 }
             });
@@ -317,7 +322,9 @@ public class FusionEngineBB {
                         case D_ATTENTE_POSITION:
                             //Interdit
                             break;
-                                
+                             case D_CAMERA:
+                                //Interdit
+                                break;   
                     }   
                 
                 }
@@ -380,17 +387,21 @@ public class FusionEngineBB {
                 public void propertyChange(PropertyChangeEvent evt) {
                     switch(e){
                         case D_CAMERA :
+                            t.cancel();
                             Vector3f v = (Vector3f) evt.getNewValue();
                             try {
                                 System.out.println(e + " -> bouger " + idforme);
                                 System.out.println("x = " + v.x + " | y = " + v.y);
                                 bus.sendMsg("Palette:DeplacerObjet nom="+idforme+" x="+(int)(v.x*30)+" y="+(int)(-v.y*30));
+                                timerCamera();
                             } catch (IvyException ex) {
                                 Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
                             }
                             break;
                     }
                 }
+
+
                 
             });
             
@@ -443,7 +454,9 @@ public class FusionEngineBB {
                     case D_ATTENTE_POSITION:
                         //Interdit
                         break;
-                            
+                            case D_CAMERA:
+                                //Interdit
+                                break;
                 }
                 //rep = "CreerRectangle x="+x+" y="+y+" longueur=80 hauteur=40 couleurFond=white";
                 break;
@@ -489,7 +502,9 @@ public class FusionEngineBB {
                     case D_ATTENTE_POSITION:
                         //Interdit
                         break;
-                            
+                          case D_CAMERA:
+                                //Interdit
+                                break;  
                 }
                 //rep = "CreerEllipse x="+x+" y="+y;
                 break;
@@ -546,6 +561,9 @@ public class FusionEngineBB {
                     case D_ATTENTE_POSITION:
                         //Interdit
                         break;
+                        case D_CAMERA:
+                                //Interdit
+                                break;
                 } 
                 //waiting_loc = true;
                 break;
@@ -617,6 +635,9 @@ public class FusionEngineBB {
                     case D_ATTENTE_POSITION:
                         //Interdit
                         break;
+                        case D_CAMERA:
+                                //Interdit
+                                break;
                 }  
                 break;
                 
@@ -659,6 +680,9 @@ public class FusionEngineBB {
                     case D_ATTENTE_POSITION:
                         //Interdit
                         break;
+                        case D_CAMERA:
+                                //Interdit
+                                break;
                 } 
                 break;
                 
@@ -714,6 +738,9 @@ public class FusionEngineBB {
                     case D_ATTENTE_POSITION:
                         //Interdit
                     break;
+                        case D_CAMERA:
+                                //Interdit
+                                break;
                 }
                 //rep = "CreerRectangle x="+x+" y="+y+" longueur=80 hauteur=40 couleurFond=white";
                 break;
@@ -760,6 +787,9 @@ public class FusionEngineBB {
                     case D_ATTENTE_POSITION:
                         //Interdit
                          break;
+                        case D_CAMERA:
+                                //Interdit
+                                break;
                 }
                 //rep = "CreerEllipse x="+x+" y="+y;
                 break;
@@ -810,6 +840,9 @@ public class FusionEngineBB {
                     case D_COULEUR:
                         //Interdit
                         break;
+                        case D_CAMERA:
+                                //Interdit
+                                break;
                     
                 }
                 break;
@@ -857,7 +890,10 @@ public class FusionEngineBB {
                             break;
                         case D_ATTENTE_POSITION:
                             //Interdit
-                break;
+                        break;
+                            case D_CAMERA:
+                                //Interdit
+                                break;
                 }
                 break;
                 
@@ -905,6 +941,9 @@ public class FusionEngineBB {
                         case D_ATTENTE_POSITION:
                             //Interdit
                             break;
+                            case D_CAMERA:
+                                //Interdit
+                                break;
                 }
                 break;
                 
@@ -952,6 +991,9 @@ public class FusionEngineBB {
                         case D_ATTENTE_POSITION:
                             //Interdit
                             break;
+                            case D_CAMERA:
+                                //Interdit
+                                break;
                 }
                 break;
                 
@@ -995,6 +1037,9 @@ public class FusionEngineBB {
                         case D_ATTENTE_POSITION:
                             //Interdit
                             break;
+                            case D_CAMERA:
+                                //Interdit
+                                break;
                 }
                 break;
             /*    
@@ -1024,10 +1069,10 @@ public class FusionEngineBB {
     private void creerForme(Forme f, int x, int y, String c) throws IvyException {
         switch(f){
             case RECTANGLE :
-                bus.sendMsg("Palette:CreerRectangle x="+(xc-40)+" y="+(yc-20)+" longueur=80 hauteur=40 couleurFond="+c);
+                bus.sendMsg("Palette:CreerRectangle x="+(xc)+" y="+(yc)+" longueur=80 hauteur=40 couleurFond="+c);
                 break;
             case ELLIPSE :
-                bus.sendMsg("Palette:CreerEllipse x="+(xc-40)+" y="+(yc-20)+" longueur=80 hauteur=40 couleurFond="+c);
+                bus.sendMsg("Palette:CreerEllipse x="+(xc)+" y="+(yc)+" longueur=80 hauteur=40 couleurFond="+c);
                 break;
         }
     }
@@ -1091,6 +1136,25 @@ public class FusionEngineBB {
     
     private void timerDeplacerAvecCouleur(){
     
+        t = new Timer();
+        tc = new TimerTask() {
+            @Override
+            public void run() {
+                e = Etats.INIT;
+                System.out.println(e);
+                x0=0;
+                y0=0;
+                x1=0;
+                y1=0;
+                c = "white";
+                f = Forme.NULL;
+                idforme = "";
+            }
+        };
+        t.schedule(tc,3000);
+    }
+    
+    private void timerCamera() {
         t = new Timer();
         tc = new TimerTask() {
             @Override
