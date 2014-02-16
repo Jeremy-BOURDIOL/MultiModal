@@ -47,10 +47,13 @@ public final class TangibleTracker extends JFrame implements NyARMultipleMarkerB
     private final String CARCODE_FILE2 = "./Data/patt.kanji";
     // BLEU
     private final String CARCODE_FILE3 = "./Data/patt.samp1";
+    // VERT
+    private final String CARCODE_FILE4 = "./Data/patt.samp2";
     
     private int PATT_HIRO_ID;
     private int PATT_KANJI_ID;
     private int PATT_SAMP1_ID;
+    private int PATT_SAMP2_ID;
     
     private final String PARAM_FILE = "./Data/camera_para.dat";
       
@@ -65,13 +68,15 @@ public final class TangibleTracker extends JFrame implements NyARMultipleMarkerB
 
     public TangibleTracker() throws Exception {
         NyARCode ar_codes[];
-        ar_codes = new NyARCode[3];
+        ar_codes = new NyARCode[4];
         ar_codes[0] = new NyARCode(16, 16);
         ar_codes[0].loadARPattFromFile(CARCODE_FILE1);
         ar_codes[1] = new NyARCode(16, 16);
         ar_codes[1].loadARPattFromFile(CARCODE_FILE2);
         ar_codes[2] = new NyARCode(16, 16);
         ar_codes[2].loadARPattFromFile(CARCODE_FILE3);
+        ar_codes[3] = new NyARCode(16, 16);
+        ar_codes[3].loadARPattFromFile(CARCODE_FILE4);
 
         PATT_HIRO_ID = PATT_ID;
         PATT_ID++;
@@ -79,12 +84,15 @@ public final class TangibleTracker extends JFrame implements NyARMultipleMarkerB
         PATT_ID++;
         PATT_SAMP1_ID = PATT_ID;
         PATT_ID++;
+        PATT_SAMP2_ID = PATT_ID;
+        PATT_ID++;
 
         double marker_width[];
-        marker_width = new double[3];
+        marker_width = new double[4];
         marker_width[0] = 0.08;
         marker_width[1] = 0.08;
         marker_width[2] = 0.08;
+        marker_width[3] = 0.08;
 
 
         ar_param = new J3dNyARParam();
@@ -132,7 +140,7 @@ public final class TangibleTracker extends JFrame implements NyARMultipleMarkerB
         
         
         nya_behavior = new NyARMultipleMarkerBehaviorHolder(ar_param, 30f, 
-                                                            ar_codes, marker_width, 3);
+                                                            ar_codes, marker_width, 4);
 		
         nya_behavior.setTransformGroup(transformGroupbOject, PATT_HIRO_ID);
         nya_behavior.setBackGround(background);
@@ -174,6 +182,9 @@ public final class TangibleTracker extends JFrame implements NyARMultipleMarkerB
                 break;
             case 2:
                 support.firePropertyChange("Color", null, "BLEU");
+                break;
+            case 3:
+                support.firePropertyChange("Color", null, "VERT");
                 break;
         }
     }

@@ -351,11 +351,21 @@ public class FusionEngineBB {
                                 break;
                         }
                     }
-                    else {
+                    else if(evt.getNewValue() == "BLEU"){
                         switch(e){
                             case C_COULEUR :
                                 t.cancel();
                                 c = "blue";
+                                System.out.println(c);
+                                timerCreer();
+                                break;
+                        }
+                    }
+                    else {
+                        switch(e){
+                            case C_COULEUR :
+                                t.cancel();
+                                c = "green";
                                 System.out.println(c);
                                 timerCreer();
                                 break;
