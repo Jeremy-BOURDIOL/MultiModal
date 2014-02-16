@@ -712,6 +712,28 @@ public class FusionEngineBB {
                 } 
                 //waiting_loc = true;
                 break;
+                
+                case "Annuler" :
+                    e = Etats.INIT;
+                    System.out.println(e);
+                    xc = 0;
+                    yc = 0;
+                    x0 = 0;
+                    y0 = 0;
+                    x1 = 0;
+                    y1 = 0;
+                    idforme = "";
+                    c = "white";
+                    f = Forme.NULL;
+                    if(t != null){
+                        t.purge();
+                    }
+                    if(t2 != null){
+                        t2.purge();
+                    }
+                
+                //waiting_loc = true;
+                break;
         }
     }
     
