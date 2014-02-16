@@ -5,7 +5,6 @@
 package fusionenginebandb;
 
 import fr.dgac.ivy.*;
-import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -54,24 +53,21 @@ public class FusionEngineBB {
         bus = new Ivy("FusionEngine","FusionEngine Ready",null);
         try {
             bus.bindMsg("^ICAR (.*)",new IvyMessageListener() {
+                @Override
                 public void receive(IvyClient client, String[] args) {
                     parsecmdICAR(args[0]);
-                    /*
-                    try {
-                        bus.sendMsg("Palette:"+parsecmdICAR(args[0]));
-                    } catch (IvyException ex) {
-                        Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
-                    }*/
                 }
             });
            
              bus.bindMsg("^sra5 Text=(.*) Confidence=(.*)",new IvyMessageListener() {
+                 @Override
                 public void receive(IvyClient client, String[] args) {
                        parsecmdSRA(args[0]);
                     }
             });
 
             bus.bindMsg("^Palette:MouseReleased x=([0-9]*) y=([0-9]*)",new IvyMessageListener() {
+                @Override
                 public void receive(IvyClient client, String[] args) {
                     
                         switch(e){
@@ -135,34 +131,12 @@ public class FusionEngineBB {
                                     break;
                                 
                         }
-                        
-                        //TODO Jeremy mettre dans un état
-                       /* try {
-                            //bus.sendMsg("J'ai :"+args[0] + " : "+ args[1]);
-                            if(!waiting_loc) {
-                                bus.sendMsg("Palette:TesterPoint x="+args[0]+" y="+args[1]);
-                            }
-                            else {
-                                int tmpx = Integer.parseInt(args[0]) - (Integer.parseInt(x) + 40);
-                                int tmpy = Integer.parseInt(args[1]) - (Integer.parseInt(y) + 20);
-                                bus.sendMsg("Palette:DeplacerObjet nom="+lastSelected+" x="+tmpx+" y="+tmpy);
-                                waiting_loc = false;
-                            }
-                            x = ""+(Integer.parseInt(args[0])-40);
-                            y = ""+(Integer.parseInt(args[1])-20);
-                        } catch (IvyException ex) {
-                            Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
-                        }   */
-                    
                 }
-
-                
             });
             
             bus.bindMsg("^Palette:ResultatTesterPoint x=([0-9]*) y=([0-9]*) nom=(.*)",new IvyMessageListener() {
+                @Override
                 public void receive(IvyClient client, String[] args) {
-                    //TODO Jeremy a mettre dans un état
-                    //lastSelected = args[2];    
                     switch(e){
                         case D_FORME :
                             if(args[2].startsWith("E") && f.equals(Forme.ELLIPSE) ){
@@ -199,13 +173,14 @@ public class FusionEngineBB {
             */
             
             TangibleTracker track = new TangibleTracker();
+            
             track.addPropertyChangeListener("Color", new PropertyChangeListener() {
 
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
                     if(evt.getNewValue() == "ROUGE") {
                         switch(e){
-                            case C_FORME :
+                            case C_COULEUR :
                                 t.cancel();
                                 c = "red";
                                 System.out.println(c);
@@ -215,7 +190,7 @@ public class FusionEngineBB {
                     }
                     else {
                         switch(e){
-                            case C_FORME :
+                            case C_COULEUR :
                                 t.cancel();
                                 c = "blue";
                                 System.out.println(c);
@@ -225,12 +200,13 @@ public class FusionEngineBB {
                     }
                 }
             });
+            
             track.addPropertyChangeListener("LocationChange", new PropertyChangeListener() {
 
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
                     switch(e){
-                        case D_FORME_SELECTIONNEE :
+                        case D_CAMERA :
                             Vector3f v = (Vector3f) evt.getNewValue();
                             try {
                                 System.out.println(e + " -> bouger " + idforme);
@@ -252,7 +228,6 @@ public class FusionEngineBB {
     }
     
     private void parsecmdICAR(String string) {
-        String rep = "";
         switch(string) {
             case "Rectangle" :
                 switch(e){
@@ -308,7 +283,6 @@ public class FusionEngineBB {
     
 
     private void parsecmdSRA(String string) {
-        String rep = "";
         String cmd = skip3suspension(string);
         System.out.println("Recu : " + cmd);
         switch(cmd) {
@@ -346,6 +320,15 @@ public class FusionEngineBB {
                 switch (e) {
                     case INIT :
                         e = Etats.DEPLACER;
+                        System.out.println(e);
+                        break;
+                } 
+                break;
+                
+            case "comme cela":
+                switch (e) {
+                    case D_FORME_SELECTIONNEE :
+                        e = Etats.D_CAMERA;
                         System.out.println(e);
                         break;
                 } 
@@ -445,7 +428,7 @@ public class FusionEngineBB {
 
                 }
                 break;
-                
+            /*
             case "haut" :
                 rep = "DeplacerObjet nom="+lastSelected+" x=0 y=-25";
                 break;
@@ -458,6 +441,7 @@ public class FusionEngineBB {
             case "droite" :
                 rep = "DeplacerObjet nom="+lastSelected+" x=25 y=0";
                 break;
+            */
         }
     }
 
@@ -534,6 +518,6 @@ public class FusionEngineBB {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {
-        new FusionEngineBB();
+        FusionEngineBB fusionEngineBB = new FusionEngineBB();
     }
 }

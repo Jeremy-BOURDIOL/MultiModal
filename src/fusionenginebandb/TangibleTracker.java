@@ -10,8 +10,6 @@ import java.awt.BorderLayout;
 import java.awt.Insets;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.media.j3d.Background;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
@@ -37,7 +35,7 @@ import jp.nyatla.nyartoolkit.java3d.utils.NyARMultipleMarkerBehaviorListener;
  *
  * @author Jéjé
  */
-public class TangibleTracker extends JFrame implements NyARMultipleMarkerBehaviorListener {
+public final class TangibleTracker extends JFrame implements NyARMultipleMarkerBehaviorListener {
 
     private static int PATT_ID = 0;
     
@@ -180,18 +178,22 @@ public class TangibleTracker extends JFrame implements NyARMultipleMarkerBehavio
         }
     }
     
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         support.addPropertyChangeListener(listener);
     }
     
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         support.removePropertyChangeListener(listener);
     }
     
+    @Override
     public void addPropertyChangeListener(String s, PropertyChangeListener listener) {
         support.addPropertyChangeListener(s, listener);
     }
     
+    @Override
     public void removePropertyChangeListener(String s, PropertyChangeListener listener) {
         support.removePropertyChangeListener(s, listener);
     }

@@ -19,5 +19,6 @@ public enum Etats {
     D_FORME_SELECTIONNEE, 
     D_POSITION, 
     D_COULEUR, 
-    D_ATTENTE_POSITION
+    D_ATTENTE_POSITION, 
+    D_CAMERA
 }
