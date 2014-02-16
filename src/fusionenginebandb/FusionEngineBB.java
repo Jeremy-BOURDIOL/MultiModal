@@ -92,7 +92,24 @@ public class FusionEngineBB {
                                 xc = Integer.parseInt(args[0]);
                                 yc = Integer.parseInt(args[1]);
                                 break;
-                                
+                            case C_COULEUR: 
+                                t = new Timer();
+                                t.schedule(new TimerTask() {
+
+                                    @Override
+                                    public void run() {
+                                        c ="white";
+                                        e = Etats.C_FORME;
+                                        System.out.println(e);
+                                        timerCreer();
+                                    }
+                                }, 2000);
+                                try {
+                                    bus.sendMsg("Palette:TesterPoint x="+args[0]+" y="+args[1]);
+                                } catch (IvyException ex) {
+                                    Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                break;
                             case D_FORME :
                                 x0 = Integer.parseInt(args[0]);
                                 y0 = Integer.parseInt(args[1]);
@@ -104,7 +121,18 @@ public class FusionEngineBB {
                                     Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                                 break;
-                                
+                            case D_COULEUR :
+                                x0 = Integer.parseInt(args[0]);
+                                y0 = Integer.parseInt(args[1]);
+                                x1 = x0;
+                                y1 = y0;
+                                try {
+                                    System.out.println("testPt");
+                                    bus.sendMsg("Palette:TesterPoint x="+args[0]+" y="+args[1]);
+                                } catch (IvyException ex) {
+                                    Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                break;
                             case D_FORME_SELECTIONNEE :
                                 t.cancel();
                                 e = Etats.D_ATTENTE_POSITION;
@@ -129,6 +157,21 @@ public class FusionEngineBB {
                                     y1 = Integer.parseInt(args[1]);
                                     timerDeplacer();
                                     break;
+                            case INIT:
+                                //Interdit
+                                break;
+                            case CREER :
+                                //Interdit
+                                break;
+                            case C_ATTENTE_POSITION:
+                                //Interdit
+                                break;
+                            case DEPLACER:
+                                //Interdit
+                                break;
+                            case D_ATTENTE_POSITION:
+                                //Interdit
+                                break;
                                 
                         }
                 }
@@ -138,6 +181,16 @@ public class FusionEngineBB {
                 @Override
                 public void receive(IvyClient client, String[] args) {
                     switch(e){
+                        case C_COULEUR :
+                            t.cancel();
+                            idforme = args[2];
+                            try {
+                                bus.sendMsg("Palette:DemanderInfo nom="+idforme);
+                            } catch (IvyException ex) {
+                                Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            break;
+                        
                         case D_FORME :
                             if(args[2].startsWith("E") && f.equals(Forme.ELLIPSE) ){
                                 
@@ -156,7 +209,117 @@ public class FusionEngineBB {
                             }   
                             break;
                             
+                        case D_COULEUR: 
+                            if(args[2].startsWith("E") && f.equals(Forme.ELLIPSE) ){
+                                
+                                idforme = args[2];
+                                try {
+                                    bus.sendMsg("Palette:DemanderInfo nom="+idforme);
+                                    System.out.println("demandeInfo");
+                                } catch (IvyException ex) {
+                                    Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                            
+                            if(args[2].startsWith("R") && f.equals(Forme.RECTANGLE)){
+                                
+                                idforme = args[2];
+                                try {
+                                    
+                                    bus.sendMsg("Palette:DemanderInfo nom="+idforme);
+                                    System.out.println("demandeInfo");
+                                } catch (IvyException ex) {
+                                    Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }   
+                            break;
+                            
+                        case INIT:
+                            //Interdit
+                            break;
+                        case CREER:
+                            //Interdit
+                            break;
+                        case C_FORME:
+                            //Interdit
+                            break;
+                        case C_POSITION:
+                            //Interdit
+                            break;
+
+                        case C_ATTENTE_POSITION:
+                            //Interdit
+                            break;
+                        case DEPLACER:
+                            //Interdit
+                            break;
+
+                        case D_FORME_SELECTIONNEE:
+                            //Interdit
+                            break;
+                        case D_POSITION:
+                            //Interdit
+                            break;
+
+                        case D_ATTENTE_POSITION:
+                            //Interdit
+                            break;
+                               
                     }
+                }
+            });
+            
+             bus.bindMsg("^Palette:Info nom=([A-Z]*[0-9]*) x=([0-9]*) y=([0-9]*) longueur=([0-9]*) hauteur=([0-9]*) couleurFond=(.*) couleurContour=(.*)",new IvyMessageListener() {
+                public void receive(IvyClient client, String[] args) {
+                    switch(e){
+                        case C_COULEUR:
+                            c = args[5];
+                            e = Etats.C_FORME;
+                            System.out.println(e);
+                            timerCreer();
+                            break;
+                        case D_COULEUR :
+                            System.out.println("Couleur fond : "+args[5]);
+                            if(c.equals(args[5])){  
+                                t.cancel();
+                                e = Etats.D_FORME_SELECTIONNEE;
+                                System.out.println(e);
+                                timerDeplacer();
+                            }   
+                            break;
+                        case INIT:
+                            //Interdit
+                            break;
+                        case CREER:
+                            //Interdit
+                            break;
+                        case C_FORME:
+                            //Interdit
+                            break;
+                        case C_POSITION:
+                            //Interdit
+                            break;
+                        case C_ATTENTE_POSITION:
+                            //Interdit
+                            break;
+                        case DEPLACER:
+                            //Interdit
+                            break;
+                        case D_FORME:
+                            //Interdit
+                            break;
+                        case D_FORME_SELECTIONNEE:
+                            //Interdit
+                            break;
+                        case D_POSITION:
+                            //Interdit
+                            break;
+                        case D_ATTENTE_POSITION:
+                            //Interdit
+                            break;
+                                
+                    }   
+                
                 }
             });
             
@@ -237,6 +400,40 @@ public class FusionEngineBB {
                         System.out.println(e+" "+f);
                         timerCreer();
                         break;
+                    case INIT:
+                        //Interdit
+                        break;
+                    case C_FORME:
+                        //Interdit
+                        break;
+                    case C_POSITION:
+                        //Interdit
+                        break;
+                    case C_COULEUR:
+                        //Interdit
+                        break;
+                    case C_ATTENTE_POSITION:
+                        //Interdit
+                        break;
+                    case DEPLACER:
+                        //Interdit
+                        break;
+                    case D_FORME:
+                        //Interdit
+                        break;
+                    case D_FORME_SELECTIONNEE:
+                        //Interdit
+                        break;
+                    case D_POSITION:
+                        //Interdit
+                        break;
+                    case D_COULEUR:
+                        //Interdit
+                        break;
+                    case D_ATTENTE_POSITION:
+                        //Interdit
+                        break;
+                            
                 }
                 //rep = "CreerRectangle x="+x+" y="+y+" longueur=80 hauteur=40 couleurFond=white";
                 break;
@@ -248,10 +445,41 @@ public class FusionEngineBB {
                         timerCreer();
                         System.out.println(e+" "+f);
                         break;
-                        case DEPLACER :
-                           e =Etats.D_FORME;
-                           f = Forme.ELLIPSE;
-                           break;
+                    case DEPLACER :
+                        e =Etats.D_FORME;
+                        f = Forme.ELLIPSE;
+                        break;
+                    case INIT:
+                        //Interdit
+                        break;
+                    case C_FORME:
+                        //Interdit
+                        break;
+                    case C_POSITION:
+                        //Interdit
+                        break;
+                    case C_COULEUR:
+                        //Interdit
+                        break;
+                    case C_ATTENTE_POSITION:
+                        //Interdit
+                        break;
+                    case D_FORME:
+                        //Interdit
+                        break;
+                    case D_FORME_SELECTIONNEE:
+                        //Interdit
+                        break;
+                    case D_POSITION:
+                        //Interdit
+                        break;
+                    case D_COULEUR:
+                        //Interdit
+                        break;
+                    case D_ATTENTE_POSITION:
+                        //Interdit
+                        break;
+                            
                 }
                 //rep = "CreerEllipse x="+x+" y="+y;
                 break;
@@ -275,6 +503,39 @@ public class FusionEngineBB {
                         e = Etats.DEPLACER;
                         System.out.println(e);
                         break;
+                    case CREER:
+                        //Interdit
+                        break;
+                    case C_FORME:
+                        //Interdit
+                        break;
+                    case C_POSITION:
+                        //Interdit
+                        break;
+                    case C_COULEUR:
+                        //Interdit
+                        break;
+                    case C_ATTENTE_POSITION:
+                        //Interdit
+                        break;
+                    case DEPLACER:
+                        //Interdit
+                        break;
+                    case D_FORME:
+                        //Interdit
+                        break;
+                    case D_FORME_SELECTIONNEE:
+                        //Interdit
+                        break;
+                    case D_POSITION:
+                        //Interdit
+                        break;
+                    case D_COULEUR:
+                        //Interdit
+                        break;
+                    case D_ATTENTE_POSITION:
+                        //Interdit
+                        break;
                 } 
                 //waiting_loc = true;
                 break;
@@ -284,7 +545,7 @@ public class FusionEngineBB {
 
     private void parsecmdSRA(String string) {
         String cmd = skip3suspension(string);
-        System.out.println("Recu : " + cmd);
+        //System.out.println("Recu : " + cmd);
         switch(cmd) {
             case "annuler":
                 e = Etats.INIT;
@@ -307,12 +568,45 @@ public class FusionEngineBB {
                 break;
                 
             case "creer" :
-                System.out.println("Creation");
+                //System.out.println("Creation");
                 switch (e) {
                      case INIT :
                          e = Etats.CREER;
                          System.out.println(e);
                          break;
+                    case CREER:
+                        //Interdit
+                        break;
+                    case C_FORME:
+                        //Interdit
+                        break;
+                    case C_POSITION:
+                        //Interdit
+                        break;
+                    case C_COULEUR:
+                        //Interdit
+                        break;
+                    case C_ATTENTE_POSITION:
+                        //Interdit
+                        break;
+                    case DEPLACER:
+                        //Interdit
+                        break;
+                    case D_FORME:
+                        //Interdit
+                        break;
+                    case D_FORME_SELECTIONNEE:
+                        //Interdit
+                        break;
+                    case D_POSITION:
+                        //Interdit
+                        break;
+                    case D_COULEUR:
+                        //Interdit
+                        break;
+                    case D_ATTENTE_POSITION:
+                        //Interdit
+                        break;
                 }  
                 break;
                 
@@ -321,6 +615,39 @@ public class FusionEngineBB {
                     case INIT :
                         e = Etats.DEPLACER;
                         System.out.println(e);
+                        break;
+                    case CREER:
+                        //Interdit
+                        break;
+                    case C_FORME:
+                        //Interdit
+                        break;
+                    case C_POSITION:
+                        //Interdit
+                        break;
+                    case C_COULEUR:
+                        //Interdit
+                        break;
+                    case C_ATTENTE_POSITION:
+                        //Interdit
+                        break;
+                    case DEPLACER:
+                        //Interdit
+                        break;
+                    case D_FORME:
+                        //Interdit
+                        break;
+                    case D_FORME_SELECTIONNEE:
+                        //Interdit
+                        break;
+                    case D_POSITION:
+                        //Interdit
+                        break;
+                    case D_COULEUR:
+                        //Interdit
+                        break;
+                    case D_ATTENTE_POSITION:
+                        //Interdit
                         break;
                 } 
                 break;
@@ -343,10 +670,40 @@ public class FusionEngineBB {
                         timerCreer();
                         break;
                     case DEPLACER :
-                           e = Etats.D_FORME;
-                           f = Forme.RECTANGLE;
-                           System.out.println(e);
-                           break;
+                        e =Etats.D_FORME;
+                        f= Forme.RECTANGLE;
+                        System.out.println(e);
+                        break;
+                    case INIT:
+                        //Interdit
+                        break;
+                    case C_FORME:
+                        //Interdit
+                        break;
+                    case C_POSITION:
+                        //Interdit
+                        break;
+                    case C_COULEUR:
+                        //Interdit
+                        break;
+                    case C_ATTENTE_POSITION:
+                        //Interdit
+                        break;
+                    case D_FORME:
+                        //Interdit
+                        break;
+                    case D_FORME_SELECTIONNEE:
+                        //Interdit
+                        break;
+                    case D_POSITION:
+                        //Interdit
+                        break;
+                    case D_COULEUR:
+                        //Interdit
+                        break;
+                    case D_ATTENTE_POSITION:
+                        //Interdit
+                    break;
                 }
                 //rep = "CreerRectangle x="+x+" y="+y+" longueur=80 hauteur=40 couleurFond=white";
                 break;
@@ -360,10 +717,39 @@ public class FusionEngineBB {
                         System.out.println(e+" "+f);
                         break;
                     case DEPLACER :
-                           e = Etats.D_FORME;
-                           f = Forme.ELLIPSE;
-                           System.out.println(e);
-                           break;
+                        e =Etats.D_FORME;
+                        f = Forme.ELLIPSE;
+                        break;
+                    case INIT:
+                        //Interdit
+                        break;
+                    case C_FORME:
+                        //Interdit
+                        break;
+                    case C_POSITION:
+                        //Interdit
+                        break;
+                    case C_COULEUR:
+                        //Interdit
+                        break;
+                    case C_ATTENTE_POSITION:
+                        //Interdit
+                        break;
+                    case D_FORME:
+                        //Interdit
+                        break;
+                    case D_FORME_SELECTIONNEE:
+                        //Interdit
+                        break;
+                    case D_POSITION:
+                        //Interdit
+                        break;
+                    case D_COULEUR:
+                        //Interdit
+                        break;
+                    case D_ATTENTE_POSITION:
+                        //Interdit
+                         break;
                 }
                 //rep = "CreerEllipse x="+x+" y="+y;
                 break;
@@ -390,6 +776,31 @@ public class FusionEngineBB {
                         System.out.println(e);
                         timerDeplacer();
                         break;
+                    case INIT:
+                        //Interdit
+                        break;
+                    case CREER:
+                        //Interdit
+                        break;
+                    case C_POSITION:
+                        //Interdit
+                        break;
+                    case C_COULEUR:
+                        //Interdit
+                        break;
+                    case DEPLACER:
+                        //Interdit
+                        break;
+                    case D_FORME:
+                        //Interdit
+                        break;
+                    case D_POSITION:
+                        //Interdit
+                        break;
+                    case D_COULEUR:
+                        //Interdit
+                        break;
+                    
                 }
                 break;
                 
@@ -401,7 +812,42 @@ public class FusionEngineBB {
                         System.out.println(c);
                         timerCreer();
                         break;
-
+                    case D_FORME :
+                        e = Etats.D_COULEUR;
+                        System.out.println(e);
+                        c = "red";
+                        timerDeplacerAvecCouleur();
+                        break;
+                        case INIT:
+                            //Interdit
+                            break;
+                        case CREER:
+                            //Interdit
+                            break;
+                        case C_POSITION:
+                            //Interdit
+                            break;
+                        case C_COULEUR:
+                            //Interdit
+                            break;
+                        case C_ATTENTE_POSITION:
+                            //Interdit
+                            break;
+                        case DEPLACER:
+                            //Interdit
+                            break;
+                        case D_FORME_SELECTIONNEE:
+                            //Interdit
+                            break;
+                        case D_POSITION:
+                            //Interdit
+                            break;
+                        case D_COULEUR:
+                            //Interdit
+                            break;
+                        case D_ATTENTE_POSITION:
+                            //Interdit
+                break;
                 }
                 break;
                 
@@ -413,7 +859,42 @@ public class FusionEngineBB {
                         System.out.println(c);
                         timerCreer();
                         break;
-
+                    case D_FORME :
+                        e = Etats.D_COULEUR;
+                        System.out.println(e);
+                        c = "green";
+                        timerDeplacerAvecCouleur();
+                        break;
+                        case INIT:
+                            //Interdit
+                            break;
+                        case CREER:
+                            //Interdit
+                            break;
+                        case C_POSITION:
+                            //Interdit
+                            break;
+                        case C_COULEUR:
+                            //Interdit
+                            break;
+                        case C_ATTENTE_POSITION:
+                            //Interdit
+                            break;
+                        case DEPLACER:
+                            //Interdit
+                            break;
+                        case D_FORME_SELECTIONNEE:
+                            //Interdit
+                            break;
+                        case D_POSITION:
+                            //Interdit
+                            break;
+                        case D_COULEUR:
+                            //Interdit
+                            break;
+                        case D_ATTENTE_POSITION:
+                            //Interdit
+                            break;
                 }
                 break;
                 
@@ -425,10 +906,88 @@ public class FusionEngineBB {
                         System.out.println(c);
                         timerCreer();
                         break;
-
+                    case D_FORME :
+                        e = Etats.D_COULEUR;
+                        System.out.println(e);
+                        c = "blue";
+                        timerDeplacerAvecCouleur();
+                        break;
+                        case INIT:
+                            //Interdit
+                            break;
+                        case CREER:
+                            //Interdit
+                            break;
+                        case C_POSITION:
+                            //Interdit
+                            break;
+                        case C_COULEUR:
+                            //Interdit
+                            break;
+                        case C_ATTENTE_POSITION:
+                            //Interdit
+                            break;
+                        case DEPLACER:
+                            //Interdit
+                            break;
+                        case D_FORME_SELECTIONNEE:
+                            //Interdit
+                            break;
+                        case D_POSITION:
+                            //Interdit
+                            break;
+                        case D_COULEUR:
+                            //Interdit
+                            break;
+                        case D_ATTENTE_POSITION:
+                            //Interdit
+                            break;
                 }
                 break;
-            /*
+                
+            case "de cette couleur":
+                switch(e){
+                    case C_FORME:
+                        t.cancel();
+                        e = Etats.C_COULEUR;
+                        System.out.println(e);
+                        break;
+                        case INIT:
+                            //Interdit
+                            break;
+                        case CREER:
+                            //Interdit
+                            break;
+                        case C_POSITION:
+                            //Interdit
+                            break;
+                        case C_COULEUR:
+                            //Interdit
+                            break;
+                        case C_ATTENTE_POSITION:
+                            //Interdit
+                            break;
+                        case DEPLACER:
+                            //Interdit
+                            break;
+                        case D_FORME:
+                            //Interdit
+                            break;
+                        case D_FORME_SELECTIONNEE:
+                            //Interdit
+                            break;
+                        case D_POSITION:
+                            //Interdit
+                            break;
+                        case D_COULEUR:
+                            //Interdit
+                            break;
+                        case D_ATTENTE_POSITION:
+                            //Interdit
+                            break;
+                }
+                break;
+            /*    
             case "haut" :
                 rep = "DeplacerObjet nom="+lastSelected+" x=0 y=-25";
                 break;
@@ -440,8 +999,7 @@ public class FusionEngineBB {
                 break;
             case "droite" :
                 rep = "DeplacerObjet nom="+lastSelected+" x=25 y=0";
-                break;
-            */
+                break;*/
         }
     }
 
@@ -519,5 +1077,25 @@ public class FusionEngineBB {
      */
     public static void main(String[] args) throws Exception {
         FusionEngineBB fusionEngineBB = new FusionEngineBB();
+    }
+    
+    private void timerDeplacerAvecCouleur(){
+    
+        t = new Timer();
+        tc = new TimerTask() {
+            @Override
+            public void run() {
+                e = Etats.INIT;
+                System.out.println(e);
+                x0=0;
+                y0=0;
+                x1=0;
+                y1=0;
+                c = "white";
+                f = Forme.NULL;
+                idforme = "";
+            }
+        };
+        t.schedule(tc,3000);
     }
 }

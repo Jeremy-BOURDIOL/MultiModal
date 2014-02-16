@@ -35,10 +35,10 @@
 			<item><ruleref uri="#bleu"/>
 			<tag>out="bleu";</tag></item>
 			<item><ruleref uri="#de_cette_couleur"/>
-			<tag>out="de_cette_couleur";</tag></item>
+			<tag>out="de cette couleur";</tag></item>
 			
 			<item><ruleref uri="#comme_cela"/>
-			<tag>out="comme_cela";</tag></item>
+			<tag>out="comme cela";</tag></item>
 			
       		<item><ruleref uri="#annuler"/>
 			<tag>out="annuler";</tag></item>
@@ -98,13 +98,13 @@
   </rule>
       <rule id="de_cette_couleur">
 <one-of>
-      <item>de_cette_couleur</item>
+      <item>de cette couleur</item>
 </one-of>
   </rule>
      
 	       <rule id="comme_cela">
 <one-of>
-      <item>comme_cela</item>
+      <item>comme cela</item>
 </one-of>
   </rule>
   
