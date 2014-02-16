@@ -267,9 +267,9 @@ public class FusionEngineBB {
                         case D_ATTENTE_POSITION:
                             //Interdit
                             break;
-                               case D_CAMERA:
-                                //Interdit
-                                break;
+                        case D_CAMERA:
+                        //Interdit
+                        break;
                     }
                 }
             });
@@ -322,9 +322,9 @@ public class FusionEngineBB {
                         case D_ATTENTE_POSITION:
                             //Interdit
                             break;
-                             case D_CAMERA:
-                                //Interdit
-                                break;   
+                        case D_CAMERA:
+                            //Interdit
+                            break;   
                     }   
                 
                 }
@@ -356,6 +356,42 @@ public class FusionEngineBB {
                                 System.out.println(c);
                                 timerCreer();
                                 break;
+                                case INIT:
+                                    //Interdit
+                                    break;
+                                case CREER:
+                                    //Interdit
+                                    break; 
+                                case C_FORME:
+                                    //Interdit
+                                    break; 
+                                case C_POSITION:
+                                    //Interdit
+                                    break; 
+                                case C_ATTENTE_POSITION:
+                                    //Interdit
+                                    break; 
+                                case DEPLACER:
+                                    //Interdit
+                                    break; 
+                                case D_FORME:
+                                    //Interdit
+                                    break; 
+                                case D_FORME_SELECTIONNEE :
+                                    //Interdit
+                                    break; 
+                                case D_POSITION:
+                                    //Interdit
+                                    break; 
+                                case D_COULEUR:
+                                    //Interdit
+                                    break; 
+                                case D_ATTENTE_POSITION:
+                                    //Interdit
+                                    break; 
+                                case D_CAMERA:
+                                    //Interdit
+                                    break; 
                         }
                     }
                     else if(evt.getNewValue() == "BLEU"){
@@ -366,6 +402,42 @@ public class FusionEngineBB {
                                 System.out.println(c);
                                 timerCreer();
                                 break;
+                                case INIT:
+                                    //Interdit
+                                    break; 
+                                case CREER:
+                                    //Interdit
+                                    break; 
+                                case C_FORME:
+                                    //Interdit
+                                    break; 
+                                case C_POSITION:
+                                    //Interdit
+                                    break; 
+                                case C_ATTENTE_POSITION:
+                                    //Interdit
+                                    break; 
+                                case DEPLACER:
+                                    //Interdit
+                                    break; 
+                                case D_FORME:
+                                    //Interdit
+                                    break; 
+                                case D_FORME_SELECTIONNEE :
+                                    //Interdit
+                                    break; 
+                                case D_POSITION:
+                                    //Interdit
+                                    break; 
+                                case D_COULEUR:
+                                    //Interdit
+                                    break; 
+                                case D_ATTENTE_POSITION:
+                                    //Interdit
+                                    break; 
+                                case D_CAMERA:
+                                    //Interdit
+                                    break; 
                         }
                     }
                     else {
@@ -376,6 +448,42 @@ public class FusionEngineBB {
                                 System.out.println(c);
                                 timerCreer();
                                 break;
+                                case INIT:
+                                    //Interdit
+                                    break; 
+                                case CREER:
+                                    //Interdit
+                                    break; 
+                                case C_FORME:
+                                    //Interdit
+                                    break; 
+                                case C_POSITION:
+                                    //Interdit
+                                    break; 
+                                case C_ATTENTE_POSITION:
+                                    //Interdit
+                                    break; 
+                                case DEPLACER:
+                                    //Interdit
+                                    break; 
+                                case D_FORME:
+                                    //Interdit
+                                    break; 
+                                case D_FORME_SELECTIONNEE :
+                                    //Interdit
+                                    break; 
+                                case D_POSITION:
+                                    //Interdit
+                                    break; 
+                                case D_COULEUR:
+                                    //Interdit
+                                    break; 
+                                case D_ATTENTE_POSITION:
+                                    //Interdit
+                                    break; 
+                                case D_CAMERA:
+                                    //Interdit
+                                    break; 
                         }
                     }
                 }
@@ -398,6 +506,42 @@ public class FusionEngineBB {
                                 Logger.getLogger(FusionEngineBB.class.getName()).log(Level.SEVERE, null, ex);
                             }
                             break;
+                        case INIT:
+                            //Interdit
+                        break; 
+                        case CREER:
+                            //Interdit
+                        break; 
+                        case C_FORME:
+                            //Interdit
+                        break; 
+                        case C_POSITION:
+                            //Interdit
+                        break; 
+                        case C_COULEUR:
+                            //Interdit
+                        break; 
+                        case C_ATTENTE_POSITION:
+                            //Interdit
+                        break; 
+                        case DEPLACER:
+                            //Interdit
+                        break; 
+                        case D_FORME:
+                            //Interdit
+                        break; 
+                        case D_FORME_SELECTIONNEE :
+                            //Interdit
+                        break; 
+                        case D_POSITION:
+                            //Interdit
+                        break; 
+                        case D_COULEUR:
+                            //Interdit
+                        break; 
+                        case D_ATTENTE_POSITION:
+                            //Interdit
+                        break; 
                     }
                 }
 
@@ -454,9 +598,9 @@ public class FusionEngineBB {
                     case D_ATTENTE_POSITION:
                         //Interdit
                         break;
-                            case D_CAMERA:
-                                //Interdit
-                                break;
+                    case D_CAMERA:
+                        //Interdit
+                        break;
                 }
                 //rep = "CreerRectangle x="+x+" y="+y+" longueur=80 hauteur=40 couleurFond=white";
                 break;
@@ -502,9 +646,9 @@ public class FusionEngineBB {
                     case D_ATTENTE_POSITION:
                         //Interdit
                         break;
-                          case D_CAMERA:
-                                //Interdit
-                                break;  
+                    case D_CAMERA:
+                        //Interdit
+                        break;  
                 }
                 //rep = "CreerEllipse x="+x+" y="+y;
                 break;
@@ -561,9 +705,9 @@ public class FusionEngineBB {
                     case D_ATTENTE_POSITION:
                         //Interdit
                         break;
-                        case D_CAMERA:
-                                //Interdit
-                                break;
+                    case D_CAMERA:
+                        //Interdit
+                        break;
                 } 
                 //waiting_loc = true;
                 break;
